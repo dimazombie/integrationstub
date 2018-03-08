@@ -1,13 +1,10 @@
 package com.netcracker.edu.sat.stub.web;
 
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class RequestLogFilter implements Filter {
@@ -19,11 +16,11 @@ public class RequestLogFilter implements Filter {
     }
 
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException, ServletException {
-        RequestWrapper wrapper = new RequestWrapper((HttpServletRequest) request);
+        RequestWrapper wrappedRequest = new RequestWrapper((HttpServletRequest) request);
         try {
             Thread.currentThread().setName(nodeId + requestId.incrementAndGet());
-            logger.info(wrapper.getRemoteAddr() + " " + wrapper.getMethod() + " " + wrapper.getRequestURI() + " " + wrapper.getContent());
-            filterChain.doFilter(wrapper, response);
+            logger.info(wrappedRequest.getRemoteAddr() + " " + wrappedRequest.getMethod() + " " + wrappedRequest.getRequestURI() + " " + wrappedRequest.getContent());
+            filterChain.doFilter(wrappedRequest, response);
 
         }
         catch (Throwable e) {
