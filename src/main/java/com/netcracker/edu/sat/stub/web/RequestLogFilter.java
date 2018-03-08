@@ -1,5 +1,6 @@
 package com.netcracker.edu.sat.stub.web;
 
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import javax.servlet.*;
@@ -18,28 +19,16 @@ public class RequestLogFilter implements Filter {
     }
 
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException, ServletException {
-        HttpServletRequest http = (HttpServletRequest) request;
+        RequestWrapper wrapper = new RequestWrapper((HttpServletRequest) request);
         try {
             Thread.currentThread().setName(nodeId + requestId.incrementAndGet());
-            logger.info(request.getRemoteAddr() + " " + http.getMethod() + " " + http.getRequestURI() + " " + serializeParams(request));
-            filterChain.doFilter(request, response);
+            logger.info(wrapper.getRemoteAddr() + " " + wrapper.getMethod() + " " + wrapper.getRequestURI() + " " + wrapper.getContent());
+            filterChain.doFilter(wrapper, response);
+
         }
         catch (Throwable e) {
             logger.error("", e);
         }
-    }
-
-    private String serializeParams(ServletRequest request) {
-        StringBuilder builder = new StringBuilder(256);
-        for (Map.Entry<String, String[]> param : request.getParameterMap().entrySet()) {
-            builder.append(param.getKey()).append("=").append(normalize(param.getValue())).append("\t");
-        }
-        return builder.toString();
-    }
-
-    private String normalize(String[] value) {
-        String result = value.length == 1 ? value[0] : Arrays.toString(value);
-        return result.replace("\r", "\\r").replace("\n", "\\n").replace("\t", "\\t");
     }
 
     public void destroy() {
