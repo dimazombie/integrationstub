@@ -16,6 +16,6 @@ public class Launcher {
         }
 
         server.setHandler(context);
-        server.
+        server.start();
 }
 }
