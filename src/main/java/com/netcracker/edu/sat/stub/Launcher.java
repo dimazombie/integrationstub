@@ -14,7 +14,7 @@ public class Launcher {
             // Fix for Windows, so Jetty doesn't lock files
             context.getInitParams().put("org.eclipse.jetty.servlet.Default.useFileMappedBuffer", "false");
         }
-
+        //test
         server.setHandler(context);
         server.start();
     }
