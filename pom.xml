@@ -8,6 +8,7 @@
     <jersey.version>1.8</jersey.version>
     <java.version>1.8</java.version>
     <mvn.plugin.compiler>3.5.1</mvn.plugin.compiler>
+    <pmd.version>3.7</pmd.version>
   </properties>
   <packaging>war</packaging>
   <version>1.0-SNAPSHOT</version>
@@ -64,6 +65,29 @@
   </dependencies>
   <build>
     <plugins>
+      <!-- Activate PMD for java code checking -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-pmd-plugin</artifactId>
+        <version>${pmd.version}</version>
+        <configuration>
+          <rulesets>
+            <ruleset>${project.basedir}${file.separator}ruleset.xml</ruleset>
+          </rulesets>
+          <targetJdk>${java.version}</targetJdk>
+          <includeTests>true</includeTests>
+          <outputEncoding>UTF-8</outputEncoding>
+          <verbose>true</verbose>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>validate</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
